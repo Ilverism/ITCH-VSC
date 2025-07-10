@@ -23,30 +23,34 @@
     "contributes": {
         "commands": [
             {
-                "command": "inlineTagHide.toggle",
-                "title": "Inline Tag Hide: Toggle"
+                "command": "inlineTagContextHider.toggle",
+                "title": "ITCH-VSC: Toggle"
             },
             {
-                "command": "inlineTagHide.toggleMultiline",
-                "title": "Inline Tag Hide: Toggle Multiline"
+                "command": "inlineTagContextHider.toggleMultiline",
+                "title": "ITCH-VSC: Toggle Multiline"
+            },
+            {
+                "command": "inlineTagContextHider.toggleCommentFolds",
+                "title": "ITCH-VSC: Toggle Comment Folds"
             }
         ],
         "keybindings": [
             {
-                "command": "inlineTagHide.toggle",
+                "command": "inlineTagContextHider.toggle",
                 "key": "ctrl+alt+h",
                 "when": "editorTextFocus"
             }
         ],
         "configuration": {
-            "title": "Inline Tag Hide",
+            "title": "Inline Tag Context Hider",
             "properties": {
-                "inlineTagHide.regex": {
+                "inlineTagContextHider.regex": {
                     "type": "string",
                     "default": "(<span[^>]*class=(?:['\\\"]eye['\\\"]).*?>)|(<\\/span>)",
                     "description": "RegExp for tags to hide"
                 },
-                "inlineTagHide.flags": {
+                "inlineTagContextHider.flags": {
                     "type": "string",
                     "default": "gi",
                     "description": "RegExp flags"
@@ -61,6 +65,7 @@
         "vscode:prepublish": "npm run compile"
     },
     "devDependencies": {
+        "@types/node": "^24.0.13",
         "@types/vscode": "^1.101.0",
         "typescript": "^5.8.3"
     },
