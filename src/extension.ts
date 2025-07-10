@@ -30,11 +30,13 @@
 /* Imports */
 import * as vscode from 'vscode';
 import { Fold } from './fold';
+import { getCommentTester } from './commentconfig';
 
 
 /* Initialize Variables */
 let enabled = true;
 let allowMultiline = false;
+let allowCommentFolds = false;
 
 
 /**
@@ -72,7 +74,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     //COMMAND -- Toggle extension on/off
     context.subscriptions.push(
-        vscode.commands.registerCommand('inlineTagHide.toggle', () => {
+        vscode.commands.registerCommand('inlineTagContextHider.toggle', () => {
 
             //Toggle the enabled state
             enabled = !enabled;
@@ -87,7 +89,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     //COMMAND -- Toggle multiline support
     context.subscriptions.push(
-        vscode.commands.registerCommand('inlineTagHide.toggleMultiline', () => {
+        vscode.commands.registerCommand('inlineTagContextHider.toggleMultiline', () => {
 
             //Toggle the allowMultiline state
             allowMultiline = !allowMultiline;
@@ -95,8 +97,23 @@ export function activate(context: vscode.ExtensionContext) {
             //Apply/Clear decorations based on the current state
             const ed = vscode.window.activeTextEditor;
             if (ed)
-                allowMultiline ? applyDecorations(ed) : clearDecorations(ed);
+                enabled ? applyDecorations(ed) : clearDecorations(ed);
 
+        })
+    );
+
+    //COMMAND -- Toggle comment folds
+    context.subscriptions.push(
+        vscode.commands.registerCommand('inlineTagContextHider.toggleCommentFolds', () => {
+
+            //Toggle the allowCommentFolds state
+            allowCommentFolds = !allowCommentFolds;
+
+            //Apply/Clear decorations based on the current state
+            const ed = vscode.window.activeTextEditor;
+            if (ed)
+                enabled ? applyDecorations(ed) : clearDecorations(ed);
+            
         })
     );
 
@@ -145,6 +162,8 @@ function applyDecorations(editor: vscode.TextEditor) {
     const docText = editor.document.getText();
     const selections = editor.selections;
 
+    const commentTester = (allowCommentFolds ? undefined : getCommentTester());
+
     //Run every fold regex against the document text
     for (const fold of Fold.foldsList) {
 
@@ -159,6 +178,32 @@ function applyDecorations(editor: vscode.TextEditor) {
 
             const fullStart = m.index;
             const fullEnd = fullStart + m[0].length;
+
+            //Comment tester is defined, apply test
+            if (commentTester) {
+
+                const { line, blockOpen, blockClose } = commentTester;
+                const startLine = editor.document.positionAt(fullStart).line;
+                const ln = editor.document.lineAt(startLine).text;
+
+                //Got single-line comment, skip
+                if (line?.test(ln))
+                    continue;
+
+                //Got open-block comment...
+                if (blockOpen && blockClose) {
+
+                    const beforeStart = docText.slice(0, fullStart);
+                    const openIdx  = beforeStart.lastIndexOf(blockOpen);
+                    const closeIdx = beforeStart.lastIndexOf(blockClose);
+
+                    //...Still inside a block comment, skip
+                    if (openIdx > -1 && openIdx > closeIdx)
+                        continue;
+                    
+                }
+
+            }
 
             const openText = m[1];              //<-- First capture group
             const closeText = m[m.length - 1];  //<-- Last capture group
@@ -188,7 +233,7 @@ function applyDecorations(editor: vscode.TextEditor) {
             //Editing this block, skip it
             const isBeingEdited = selections.some(sel => sel.intersection(blockRange));
             if (isBeingEdited)
-                continue;     
+                continue;
 
 
             //Add the ranges to the arrays
