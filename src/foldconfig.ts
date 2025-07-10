@@ -41,9 +41,6 @@ function createHTMLFold(tagName:string, color?:string, styling?:Object):void {
 //<span>...</span>
 createHTMLFold('span');
 
-//<Inline>...</Inline>
-createHTMLFold('Inline', '#8080FF');
-
 //<b>...</b>
 createHTMLFold('b', undefined, {fontWeight: 'bold'});
 
