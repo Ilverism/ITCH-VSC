@@ -53,4 +53,4 @@ and the ability to have inline-styled content while retaining readability was im
 ## Credits
 
 - Extension by ilverism.
-- Comment detection via https://stackoverflow.com/a/71538680
+- Code comment detection (modified, ```commentconfig.ts```) via https://stackoverflow.com/a/71538680 ([CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/))
