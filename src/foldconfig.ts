@@ -1,0 +1,54 @@
+// foldconfig.ts
+
+
+/**
+ * -- Inline Tag Context Hider - VSC --
+ * 
+ * Fold configuration for HTML tags.
+ * 
+ * Comes with a helper function to create
+ * a Fold instance for any HTML tag, as
+ * well as some predefined folds for common
+ * inline tags.
+ */
+
+
+/* Imports */
+import { Fold } from "./fold";
+
+
+/**
+ * Helper function to create a Fold instance for HTML tags.
+ * 
+ * Should fit any HTML tag pairing with the specified name.
+ * 
+ * @param tagName The name of the HTML tag to fold.
+ * @param color The color to use for the fold decoration (optional).
+ * @param styling Additional styling options for the fold (optional).
+ * @returns The created Fold instance.
+ */
+function createHTMLFold(tagName:string, color?:string, styling?:Object):void {
+
+    //Create regex string to match the given HTML tag
+    const regexString = `(<${tagName}\\b[^>]*>)([\\s\\S]*?)(</${tagName}>)`;
+
+    //Create the Fold instance
+    new Fold(regexString, color, styling);
+
+}
+
+
+//<span>...</span>
+createHTMLFold('span');
+
+//<Inline>...</Inline>
+createHTMLFold('Inline', '#8080FF');
+
+//<b>...</b>
+createHTMLFold('b', undefined, {fontWeight: 'bold'});
+
+//<i>...</i>
+createHTMLFold('i', undefined, {fontStyle: 'italic'});
+
+//<div>...</div>
+createHTMLFold('div', "#FF80FF");

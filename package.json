@@ -1,0 +1,71 @@
+{
+    "name": "inline-tag-context-hider-vsc",
+    "displayName": "Inline Tag Context Hider - VSC",
+    "description": "Define foldable inline content areas with Regex to hide extraneous info when viewing a file.",
+    "version": "1.0.0",
+    "publisher": "ilverism",
+    "engines": {
+        "vscode": "^1.90.0"
+    },
+    "activationEvents": [
+        "onLanguage:html",
+        "onLanguage:svelte",
+        "onLanguage:vue",
+        "onLanguage:javascript",
+        "onLanguage:typescript",
+        "onLanguage:javascriptreact",
+        "onLanguage:typescriptreact",
+        "onLanguage:markdown",
+        "onLanguage:plaintext",
+        "onLanguage:xml",
+        "onLanguage:php"
+    ],
+    "contributes": {
+        "commands": [
+            {
+                "command": "inlineTagHide.toggle",
+                "title": "Inline Tag Hide: Toggle"
+            },
+            {
+                "command": "inlineTagHide.toggleMultiline",
+                "title": "Inline Tag Hide: Toggle Multiline"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "inlineTagHide.toggle",
+                "key": "ctrl+alt+h",
+                "when": "editorTextFocus"
+            }
+        ],
+        "configuration": {
+            "title": "Inline Tag Hide",
+            "properties": {
+                "inlineTagHide.regex": {
+                    "type": "string",
+                    "default": "(<span[^>]*class=(?:['\\\"]eye['\\\"]).*?>)|(<\\/span>)",
+                    "description": "RegExp for tags to hide"
+                },
+                "inlineTagHide.flags": {
+                    "type": "string",
+                    "default": "gi",
+                    "description": "RegExp flags"
+                }
+            }
+        }
+    },
+    "main": "./dist/extension.js",
+    "scripts": {
+        "compile": "tsc -p .",
+        "watch": "tsc -w -p .",
+        "vscode:prepublish": "npm run compile"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.101.0",
+        "typescript": "^5.8.3"
+    },
+    "dependencies": {
+        "eslint": "^9.30.1",
+        "npm-check-updates": "^18.0.1"
+    }
+}
