@@ -10,6 +10,10 @@
  * a Fold instance for any HTML tag, as
  * well as some predefined folds for common
  * inline tags.
+ *
+ * Get the extension here:
+ * https://marketplace.visualstudio.com/items?itemName=ilverism.inline-tag-context-hider-vsc
+ *
  */
 
 
