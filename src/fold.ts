@@ -110,9 +110,20 @@ export class Fold {
 
     }
 
+
+    /**
+     * Clears all folds stored in the static list.
+     */
+    static clearFolds() {
+
+        //Clear the list of folds
+        Fold.foldsList.forEach(fold => {
+            fold.tagDecoration.dispose();
+            fold.innerDecoration.dispose();
+        });
+
+        Fold.foldsList.length = 0;
+        
+    }
+
 }
-
-
-//Import foldconfig.ts to initialize folds defined in the file
-//@ts-ignore
-require('./itch_vsc_config/foldconfig');
