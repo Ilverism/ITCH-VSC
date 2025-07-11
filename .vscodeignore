@@ -2,6 +2,7 @@
 node_modules
 out/
 src/
+!src/itch_vsc_config
 tsconfig.json
 webpack.config.js
 esbuild.js

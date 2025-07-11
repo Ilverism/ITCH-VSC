@@ -14,7 +14,7 @@
 
 
 /* Imports */
-import { Fold } from "./fold";
+import { Fold } from "../fold";
 
 
 /**

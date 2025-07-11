@@ -115,4 +115,4 @@ export class Fold {
 
 //Import foldconfig.ts to initialize folds defined in the file
 //@ts-ignore
-require('./foldconfig');
+require('./itch_vsc_config/foldconfig');
