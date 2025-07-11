@@ -29,14 +29,92 @@
 
 /* Imports */
 import * as vscode from 'vscode';
-import { Fold } from './fold';
+import * as path from 'node:path';
+import * as fs from 'node:fs';
 import { getCommentTester } from './commentconfig';
+import { pathToFileURL } from 'node:url';
+import { Fold } from './fold';
 
 
 /* Initialize Variables */
 let enabled = true;
 let allowMultiline = false;
 let allowCommentFolds = false;
+let configLoading: Promise<void> | null = null;
+
+
+/**
+ * Get the path to the user configuration file.
+ *
+ * Checks for the existence of a configuration file
+ * in the `.itch-vsc` folder of the currently open
+ * workspace.
+ */
+function getUserConfigPath(): string|undefined {
+        
+    const ws = vscode.workspace.workspaceFolders?.[0];
+
+    //No workspace open -> undefined
+    if (!ws)
+        return;
+
+    //Search for the config file in the .itch-vsc folder
+    const tryFiles = ['foldconfig.mjs']
+        .map(f => path.join(ws.uri.fsPath, '.itch-vsc', f))
+        .find(p => fs.existsSync(p));
+
+    return tryFiles;
+
+}
+
+
+/**
+ * Load the user configuration file and apply the defined folds.
+ *
+ * Reads the user-defined fold configuration file,
+ * clears existing decorations, and applies new
+ * decorations based on the patterns defined in the
+ * configuration.
+ */
+
+async function loadUserConfig() {
+
+    //Prevent multiple concurrent loads
+    if (configLoading)
+        return configLoading;
+
+    configLoading = (async () => {
+
+        const cfg = getUserConfigPath();
+
+        //Failed to find a config file, exit
+        if (!cfg)
+            return;
+
+        //Clear previous decorations
+        (global as any).Fold = Fold;
+        Fold.clearFolds();
+
+        //Nuke CJS cache to always reload fresh
+        delete require.cache[require.resolve(cfg)];
+
+        const asUrl = pathToFileURL(cfg).href + `?v=${Date.now()}`;
+
+        try {
+
+            //Dynamic import for ES-modules
+            await import(asUrl); 
+
+        } catch (e) {
+
+            vscode.window.showErrorMessage(`ITCH-VSC: error loading fold config - ${(e as Error).message}`);
+        }
+
+    })().finally(() => configLoading = null);
+
+    return configLoading;
+    
+}
 
 
 /**
@@ -45,7 +123,44 @@ let allowCommentFolds = false;
  * 
  * @param context The extension context provided by VS Code.
  */
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
+
+    //Get the user configuration file
+    await loadUserConfig();
+
+    //Watch for saves / new file / delete
+    const watcher = vscode.workspace.createFileSystemWatcher('**/.itch-vsc/foldconfig.{mjs}');
+    watcher.onDidChange(loadUserConfig);
+    watcher.onDidCreate(loadUserConfig);
+    watcher.onDidDelete(loadUserConfig);
+    context.subscriptions.push(watcher);
+
+    //Config Generation
+    context.subscriptions.push(
+        vscode.commands.registerCommand('inlineTagContextHider.createConfig', async () => {
+
+            const ws = vscode.workspace.workspaceFolders?.[0];
+
+            //Workspace not open, show error
+            if (!ws)
+                return vscode.window.showErrorMessage('Please open a folder first...');
+
+            //Create resources/foldconfig.template file
+            const cfgUri = vscode.Uri.joinPath(ws.uri, '.itch-vsc', 'foldconfig.mjs');
+            await vscode.workspace.fs.createDirectory(cfgUri.with({ path: cfgUri.path.replace(/\/[^/]+$/, '') }));
+            const tplUri = vscode.Uri.joinPath(context.extensionUri, 'resources', 'foldconfig.template');
+            const template = await vscode.workspace.fs.readFile(tplUri);
+            await vscode.workspace.fs.writeFile(cfgUri, template);
+
+            //Create resources/foldexamples.html file
+            const exUri = vscode.Uri.joinPath(ws.uri, '.itch-vsc', 'foldexamples.html');
+            const exTemplate = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(context.extensionUri, 'resources', 'foldexamples.template'));
+            await vscode.workspace.fs.writeFile(exUri, exTemplate);
+
+            vscode.window.showInformationMessage('Created .itch-vsc/foldconfig.mjs - edit it and save to reload Folds.');
+        })
+    );
+
 
     //React to file edits & editor changes
     context.subscriptions.push(
