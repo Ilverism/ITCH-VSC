@@ -1,4 +1,4 @@
-// foldconfig.ts
+// foldconfig[.template|.mjs]
 
 
 /**
@@ -13,8 +13,7 @@
  */
 
 
-/* Imports */
-import { Fold } from "../fold";
+const Fold = globalThis.Fold;
 
 
 /**
@@ -27,7 +26,7 @@ import { Fold } from "../fold";
  * @param styling Additional styling options for the fold (optional).
  * @returns The created Fold instance.
  */
-function createHTMLFold(tagName:string, color?:string, styling?:Object):void {
+function createHTMLFold(tagName, color, styling) {
 
     //Create regex string to match the given HTML tag
     const regexString = `(<${tagName}\\b[^>]*>)([\\s\\S]*?)(</${tagName}>)`;
