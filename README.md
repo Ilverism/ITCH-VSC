@@ -1,5 +1,3 @@
-⚠ This is a work in progress.
-
 ## About ITCH-VSC (Inline Tag Context Hider for VS Code)
 
 ITCH-VSC is a VS Code extension used to collapse user-defined inline tags so that only the inner content is visible while viewing a file.
@@ -8,9 +6,15 @@ When the content is being edited or selected, the collapsed 'context' (e.g., inn
 The original purpose of this extension was to support my web-based visual novel engine,
 and the ability to have inline-styled content while retaining readability was important.
 
-## Installation
-
-...
+## Table of Contents
+- [About](#about-itch-vsc-inline-tag-context-hider-for-vs-code)
+- [Features](#features)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Commands](#commands)
+- [Examples](#examples)
+- [Credits](#credits)
 
 ## Features
 
@@ -20,9 +24,20 @@ and the ability to have inline-styled content while retaining readability was im
 - Exclude commented content from being folded (❗ Toggleable, ON by default)
 - Support multi-line folds (❗ Toggleable, OFF by default)
 
+## Installation
+
+- Download the VS Code Extension **[🔗here](https://marketplace.visualstudio.com/items?itemName=ilverism.inline-tag-context-hider-vsc)**
+- Run the Config Generation command:
+  - Open the VS Code Command Palette
+    - Windows/Linux: ```Ctrl + Shift + P``` or ```F1```
+    - macOS: ```Shift + Command + P``` or ```F1```
+  - Run the following command in the Command Palette: ```>ITCH-VSC: Create Fold Config```
+- Follow the steps in the **Configuration** section below
+
+
 ## Configuration
 
-- Use the existing ```foldconfig.ts``` file for configuration
+- Use the generated ```foldconfig.mjs``` file for the configuration
 - Create basic HTML tag Fold instances with the ```createHTMLFold(...)``` helper function
 - Create custom Fold instances with calls to ```new Fold(...)```
 - Fold instances are stored inside a static list, so there is no need to do any additional work with the created instances
@@ -35,9 +50,10 @@ and the ability to have inline-styled content while retaining readability was im
 
 ## Commands
 
-- ITCH-VSC: Toggle - _Toggle the extension on/off_ - ```Ctrl + Alt + H```
-- ITCH-VSC: Toggle Multiline - _Toggle multiline functionality on/off_
-- ITCH-VSC: Toggle Comment Folds - _Toggle folding of commented content on/off_
+- ```>ITCH-VSC: Create Fold Config``` - _Generate the config and example files_
+- ```>ITCH-VSC: Toggle``` - _Toggle the extension on/off_ - ```Ctrl + Alt + H```
+- ```>ITCH-VSC: Toggle Multiline``` - _Toggle multiline functionality on/off_
+- ```>ITCH-VSC: Toggle Comment Folds``` - _Toggle folding of commented content on/off_
 
 ## Examples
 
