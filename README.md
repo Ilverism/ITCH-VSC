@@ -60,13 +60,19 @@ and the ability to have inline-styled content while retaining readability was im
 ## Examples
 
 * Standard Examples _(From ```foldexamples.html```)_:
-<img width="1192" height="754" alt="image" src="https://github.com/user-attachments/assets/6566f4a2-ad13-4cf2-b9a3-0cf0bf801275" />
+
+
+<img width="700" height="480" alt="image" src="https://github.com/user-attachments/assets/6566f4a2-ad13-4cf2-b9a3-0cf0bf801275" />
 
 * Alternate Example _(Standard View)_:
-<img width="1506" height="440" alt="image" src="https://github.com/user-attachments/assets/ac9e0a6d-33e3-4f29-8644-beb9d36b0449" />
+
+
+<img width="700" height="210" alt="image" src="https://github.com/user-attachments/assets/ac9e0a6d-33e3-4f29-8644-beb9d36b0449" />
 
 * Alternate Example _(Editing View - cursor inside or selection overlapping)_:
-<img width="1846" height="435" alt="image" src="https://github.com/user-attachments/assets/a96fb1d5-822b-46d2-9ab8-2afef6385916" />
+
+
+<img width="700" height="180" alt="image" src="https://github.com/user-attachments/assets/a96fb1d5-822b-46d2-9ab8-2afef6385916" />
 
 ## Credits
 
