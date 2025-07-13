@@ -3,7 +3,7 @@
     "displayName": "Inline Tag Context Hider - VSC",
     "description": "Define foldable inline content areas with Regex to hide extraneous info when viewing a file.",
     "icon": "images/ITCH_VSC_128x128_Logo.png",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "publisher": "ilverism",
     "repository": {
         "type": "git",
